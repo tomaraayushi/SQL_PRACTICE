@@ -38,6 +38,16 @@ INNER JOIN Weather w2
     ON w1.recordDate = w2.recordDate + INTERVAL'1 day'
 WHERE w1.temperature > w2.temperature;
 
+--Q5
+SELECT 
+    e.name,
+    b.bonus
+FROM Employee e 
+LEFT JOIN Bonus b
+    ON e.empId = b.empId
+WHERE 
+    b.bonus < 1000 OR b.bonus IS NULL;
+
 
 
 
