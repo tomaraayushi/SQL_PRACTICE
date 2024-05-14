@@ -66,6 +66,22 @@ GROUP BY
 ORDER BY 
     s.student_id,
     s.student_name;
+
+--Q7
+SELECT
+    e1.name
+FROM Employee e1
+JOIN 
+    (SELECT
+        managerId,
+        COUNT(id) AS count_direct
+    FROM Employee
+    WHERE managerId IS NOT NULL
+    GROUP BY managerId
+    HAVING COUNT(id) >= 5) AS e2
+ON e1.id = e2.managerId;
+     
+
     
 
 
