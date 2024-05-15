@@ -80,6 +80,31 @@ JOIN
     GROUP BY managerId
     HAVING COUNT(id) >= 5) AS e2
 ON e1.id = e2.managerId;
+
+--Q8
+SELECT
+    s.user_id,
+    CASE
+        WHEN uc.confirmed_req IS NULL OR uc.confirmed_req = 0 
+        THEN 0 
+        ELSE ROUND((uc.confirmed_req::numeric / uc.total_req::numeric), 2)
+    END AS confirmation_rate
+FROM Signups s   
+LEFT JOIN(
+    SELECT
+        user_id,
+        COUNT(
+            CASE
+                WHEN action = 'confirmed' THEN 1
+                END
+            ) AS confirmed_req,
+        COUNT(action) AS total_req
+    FROM Confirmations
+    GROUP BY 
+        user_id) AS uc 
+    ON s.user_id = uc.user_id;
+
+
      
 
     
