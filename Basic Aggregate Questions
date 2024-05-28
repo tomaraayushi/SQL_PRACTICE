@@ -86,4 +86,17 @@ select
 from orders
 where rank = 1;
 
+--Q8
+select
+    round(count(player_id) filter(where date_diff = 1)
+            / count(distinct player_id)::numeric, 2)as fraction
+from (
+    select
+        player_id,
+        event_date - first_value(event_date) over (partition by player_id
+                                                order by event_date) as date_diff
+    from Activity
+) players;
+
+
 
