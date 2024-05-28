@@ -45,3 +45,22 @@ ORDER BY
     percentage DESC,
     r.contest_id;
 
+--Q5
+SELECT
+    query_name,
+    ROUND(AVG(rating::numeric/position::numeric)::numeric, 2)as quality,
+    ROUND(((count(*) filter (where rating < 3))::numeric / count(*)::numeric)* 100, 2)as  poor_query_percentage 
+from Queries
+where query_name IS NOT NULL
+group by query_name;
+
+--Q6
+select
+    to_char(trans_date, 'yyyy-mm')as month,
+    country,
+    count(amount) as trans_count,
+    sum(amount) as trans_total_amount,
+    count(case when state ='approved' then 1 end) as approved_count,
+    coalesce(sum(case when state = 'approved' then amount end), 0) as approved_total_amount
+from Transactions
+group by month, country;
