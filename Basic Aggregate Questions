@@ -64,3 +64,26 @@ select
     coalesce(sum(case when state = 'approved' then amount end), 0) as approved_total_amount
 from Transactions
 group by month, country;
+
+--Q7
+with orders as(
+    select 
+        case
+            when order_date = customer_pref_delivery_date 
+            then 'immediate'
+            else 'scheduled'
+        end as order_type,
+        order_date,
+        customer_pref_delivery_date,
+        rank() over(partition by customer_id 
+                    order by order_date) as rank
+    from Delivery
+)
+
+select
+    round(100.00*count(order_type) filter(where order_type = 'immediate')
+         / count(*), 2)as immediate_percentage
+from orders
+where rank = 1;
+
+
