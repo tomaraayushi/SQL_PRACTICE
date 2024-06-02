@@ -12,3 +12,26 @@ select
 from Activity
 where activity_date between ('2019-07-27'::date - interval '29' day) and '2019-07-27'
 group by activity_date;
+
+--Q3
+with year_rank as (
+    select
+        product_id,
+        year,
+        quantity,
+        price,
+        rank() over(
+            partition by product_id
+            order by year
+        ) rank
+    from sales
+)
+
+select
+    product_id,
+    year as first_year,
+    quantity,
+    price
+from year_rank
+where rank = 1;
+
