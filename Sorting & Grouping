@@ -35,3 +35,18 @@ select
 from year_rank
 where rank = 1;
 
+--Q4
+select
+    class
+from courses
+group by class
+having count(student) >= 5;
+
+--Q5
+select
+    user_id,
+    count(follower_id) as followers_count
+from followers
+group by user_id
+order by user_id;
+
