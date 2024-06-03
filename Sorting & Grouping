@@ -50,3 +50,23 @@ from followers
 group by user_id
 order by user_id;
 
+--Q6
+with n as(
+    select
+        num
+    from mynumbers
+    group by num
+    having count(num) = 1
+)
+
+select 
+    max(num) as num
+from n;
+
+--Q7
+select
+    customer_id
+from customer 
+group by customer_id
+having count(distinct product_key) = (select count(distinct product_key) from product);
+
