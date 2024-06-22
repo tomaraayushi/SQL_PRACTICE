@@ -52,5 +52,30 @@ left join logs l1 on l.id = l1.id+1
 left join logs l2 on l.id = l2.id+2
 where l.num = l1.num and l1.num = l2.num;
 
+--Q5
+with p1 as(
+    select
+        product_id,
+        new_price as price,
+        rank() over(partition by product_id
+        order by change_date desc) rank
+    from products
+    where change_date <= '2019-08-16'
+)
+
+select
+    p2.product_id,
+    coalesce(p1.price, 10)as price
+from (
+    select
+        distinct product_id
+    from 
+        products
+)p2
+left join p1 
+    on p2.product_id = p1.product_id
+where 
+    rank = 1 or rank is null;
+
 
 
