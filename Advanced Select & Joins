@@ -77,5 +77,43 @@ left join p1
 where 
     rank = 1 or rank is null;
 
+--Q6
+select
+    person_name
+from(
+    select
+        person_id,
+        person_name,
+        sum(weight) over(order by turn) as total_weight
+    from queue
+    order by turn desc
+)
+where total_weight <= 1000
+limit 1;
+
+--Q7
+with categories as(
+    select
+        case
+            when income < 20000 then 'Low Salary'
+            when income >= 20000 and income <= 50000 then 'Average Salary'
+            when income > 50000 then 'High Salary'
+        end as category,
+        count(*) acct_count
+    from accounts
+    group by category
+)
+
+select
+    c2.category,
+    coalesce(c1.acct_count, 0) accounts_count
+from categories c1
+right join (
+    select 
+        category
+    from (values ('Low Salary'), ('Average Salary'), ('High Salary')) categories(category)
+)c2
+on c1.category = c2.category;
+
 
 
