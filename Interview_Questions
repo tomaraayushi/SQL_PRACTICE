@@ -1,0 +1,70 @@
+Q1: DErive points table for ICC Tournament
+create table icc(
+	team_1 varchar(20),
+	team_2 varchar(20),
+	winner varchar(20)
+);
+
+insert into icc values
+					('India', 'SL', 'India'),
+					('SL', 'Aus', 'Aus'),
+					('SA', 'Eng', 'Eng'),
+					('Eng', 'NZ', 'NZ'),
+					('Aus', 'India', 'India');
+
+select * from icc;		
+Approach 1-
+select
+	team_name, 
+	count(1) as num_matches_played,
+	sum(win_flag) as num_matches_won,
+	count(1) - sum(win_flag) as num_matches_lose
+from (
+	select
+		team_1 as team_name ,
+		case 
+			when team_1 = winner then 1 else 0
+		end as win_flag
+	from icc
+	union all
+	select
+		team_2 as team_name,
+		case 
+			when team_2 = winner then 1 else 0
+		end as win_flag
+	from icc
+)
+group by team_name
+order by num_matches_won desc;
+
+Approach 2-
+with team_matches as (
+	select
+		team_1 as team_name,
+		case 
+			when team_1 = winner then 1 else 0
+		end as win
+	from icc
+	union all
+	select
+		team_2 as team_name,
+		case
+			when team_2 = winner then 1 else 0
+		end as win
+	from icc
+)
+
+select
+	team_name,
+	count(*) as num_matches_played,
+	sum(win)as num_won_matches,
+	sum(case 
+		when win = 0 then 1 else 0
+		end) as num_lost_matches
+from team_matches
+group by team_name
+order by num_won_matches desc;
+
+
+
+
