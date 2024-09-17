@@ -65,6 +65,8 @@ from team_matches
 group by team_name
 order by num_won_matches desc;
 
+Q2: Find new and repeat customers
+
 
 
 
